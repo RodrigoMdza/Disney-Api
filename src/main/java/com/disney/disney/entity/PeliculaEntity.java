@@ -3,22 +3,8 @@ package com.disney.disney.entity;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-
+import javax.persistence.*;
 import org.springframework.format.annotation.DateTimeFormat;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -46,18 +32,14 @@ public class PeliculaEntity {
 
     private int calificacion;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "genero.id", insertable = false, updatable = false)
     private GeneroEntity genero;
-    // CONSULTAR SI AL CREAR LA PELICULA TAMBIEN SE CREA UNA NUEVA TABLA EN GENERO
-    // Y CON QUE NOMBRE. AL EXISTIR YA EL OBJETO DE ACTUALIZA O DUPLICA.
 
     @Column(name = "genero.id", nullable = false)
     private Long generoId;
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    // CONSULTAR PORQUE SE PONEN LAS LLAVES Y SI HACE EL PERSIST CUANDO NO
-    // HAY ENTIDAD GUARDADA Y MERGE CUANDO SI HAY PARA NO DUPLICARLO.
     @JoinTable(name = "pelicula_personaje",
                joinColumns = @JoinColumn(name = "pelicula_id"),
                inverseJoinColumns = @JoinColumn(name = "personaje_id") )
