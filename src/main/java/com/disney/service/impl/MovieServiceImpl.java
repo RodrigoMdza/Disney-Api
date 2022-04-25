@@ -49,19 +49,39 @@ public class MovieServiceImpl implements MovieService{
         return result;
     }
 
-    public void addCharacter (Long id, Long characterId) {
-        MovieEntity movie = movieRepository.getById(id);
-        CharacterEntity character =characterRepository.getById(characterId);
+    public MovieDetailedDTO addCharacter (Long id, Long characterId) {
+        Optional<MovieEntity> movieOptional = movieRepository.findById(id);
+        if (!movieOptional.isPresent()) {
+            throw new ParamNotFound("This movieId is not present");
+        }
+        MovieEntity movie = movieOptional.get();
+        Optional<CharacterEntity> characterOptional = characterRepository.findById(characterId);
+        if (!characterOptional.isPresent()) {
+            throw new ParamNotFound("This characterId is not present");
+        }
+        CharacterEntity character = characterOptional.get();
         movie.getCharacters().add(character);
         movieRepository.save(movie);
+        MovieDetailedDTO movie2 = movieMapper.movieEntity2DTO(movie);
+        return movie2;
     }
 
-    public void deleteCharacter (Long id, Long characterId) {
-        MovieEntity movie = movieRepository.getById(id);
-        CharacterEntity character = characterRepository.getById(characterId);
+    public MovieDetailedDTO deleteCharacter (Long id, Long characterId) {
+        Optional<MovieEntity> movieOptional = movieRepository.findById(id);
+        if(!movieOptional.isPresent()) {
+            throw new ParamNotFound("This movieId is not present");
+        }
+        MovieEntity movie = movieOptional.get();
+        Optional<CharacterEntity> characterOptional = characterRepository.findById(characterId);
+        if (!characterOptional.isPresent()) {
+            throw new ParamNotFound("This characterId is not present");
+        }
+        CharacterEntity character = characterOptional.get();
         List<CharacterEntity> characters = movie.getCharacters();
         characters.remove(character);
         movieRepository.save(movie);
+        MovieDetailedDTO movie2 = movieMapper.movieEntity2DTO(movie);
+        return movie2;
     }
 
     public MovieDetailedDTO update(Long id, MovieDetailedDTO dto) {

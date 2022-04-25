@@ -10,8 +10,8 @@ public interface MovieService {
     MovieDetailedDTO save(MovieDetailedDTO dto);
     MovieDetailedDTO getById(Long id);
     List<MovieBasicDTO> getallPeliculas();
-    void addCharacter(Long id, Long characterId);
-    void deleteCharacter(Long id, Long characterId);
+    MovieDetailedDTO addCharacter(Long id, Long characterId);
+    MovieDetailedDTO deleteCharacter(Long id, Long characterId);
     MovieDetailedDTO update(Long id, MovieDetailedDTO dto);
     void delete (Long id);
 

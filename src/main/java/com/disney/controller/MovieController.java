@@ -44,15 +44,15 @@ public class MovieController {
     }
 
     @PostMapping("/{id}/characters/{characterId}")
-    public ResponseEntity<Void> addCharacter (@PathVariable Long id, @PathVariable Long characterId) {
-        movieService.addCharacter(id, characterId);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+    public ResponseEntity<MovieDetailedDTO> addCharacter (@PathVariable Long id, @PathVariable Long characterId) {
+        MovieDetailedDTO movie = movieService.addCharacter(id, characterId);
+        return ResponseEntity.ok(movie);
     }
 
     @DeleteMapping("/{id}/characters/{characterId}") 
-    public ResponseEntity<Void> deleteCharacter (@PathVariable Long id,@PathVariable Long characterId) {
-        movieService.deleteCharacter(id,characterId);
-        return ResponseEntity.status(HttpStatus.OK).build();
+    public ResponseEntity<MovieDetailedDTO> deleteCharacter (@PathVariable Long id,@PathVariable Long characterId) {
+        MovieDetailedDTO movie = movieService.deleteCharacter(id,characterId);
+        return ResponseEntity.ok(movie);
     }
 
     @PutMapping("/{id}")

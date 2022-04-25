@@ -1,5 +1,8 @@
 package com.disney.dto;
 
+import lombok.Data;
+
+@Data
 public class GenderDTO {
     private Long id;
     private String name;

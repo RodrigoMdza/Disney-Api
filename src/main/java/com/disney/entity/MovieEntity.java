@@ -39,17 +39,19 @@ public class MovieEntity {
     private int rating;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "gender.id", insertable = false, updatable = false)
+    @JoinColumn(name = "gender_id", insertable = false, updatable = false)
     private GenderEntity gender;
 
-    @Column(name = "gender.id", nullable = false)
+    @Column(name = "gender_id", nullable = false)
     private Long genderId;
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(name = "movie_character",
                joinColumns = @JoinColumn(name = "movie_id"),
-               inverseJoinColumns = @JoinColumn(name = "character_id") )
-     private List<CharacterEntity> characters = new ArrayList<>();
+               inverseJoinColumns = @JoinColumn(name = "character_id"))
+    private List<CharacterEntity> characters = new ArrayList<>();
+
+    private boolean deleted=Boolean.FALSE;
 
     public Long getId() {
         return id;
@@ -114,6 +116,13 @@ public class MovieEntity {
     public void setCharacters(List<CharacterEntity> characters) {
         this.characters = characters;
     }
-     
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
     
 }

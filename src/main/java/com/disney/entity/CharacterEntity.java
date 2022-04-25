@@ -2,6 +2,7 @@ package com.disney.entity;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.persistence.*;
 
 import org.hibernate.annotations.SQLDelete;
@@ -13,7 +14,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name="character")
+@Table(name="characters")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -38,6 +39,8 @@ public class CharacterEntity {
 
     @ManyToMany(mappedBy = "characters", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private List<MovieEntity> movies = new ArrayList<>();
+
+    private boolean deleted=Boolean.FALSE;
 
     public Long getId() {
         return id;
@@ -93,6 +96,14 @@ public class CharacterEntity {
 
     public void setMovies(List<MovieEntity> movies) {
         this.movies = movies;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
     
 }

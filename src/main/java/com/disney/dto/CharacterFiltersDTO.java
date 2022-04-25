@@ -9,8 +9,6 @@ public class CharacterFiltersDTO {
         private List<Long> movies;
         private String order;
     
-        
-    
         public CharacterFiltersDTO(String name, Long age, List<Long> movies, String order) {
             this.name = name;
             this.age = age;
