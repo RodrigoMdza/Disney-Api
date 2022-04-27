@@ -1,8 +1,12 @@
 package com.disney.dto;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 @Data
+@Getter
+@Setter
 public class GenderDTO {
     private Long id;
     private String name;

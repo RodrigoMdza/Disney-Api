@@ -1,5 +1,6 @@
 package com.disney.service.impl;
 
+import com.disney.exception.EmailException;
 import com.disney.service.EmailService;
 
 
@@ -27,14 +28,14 @@ public class EmailServiceImpl implements EmailService{
     private String emailSender;
 
     @Override
-    public void sendWelcomeEmailTo(String to) {
+    public void sendWelcomeEmailTo(String to) throws IOException{
         String apiKey = env.getProperty("EMAIL_API_KEY");
         Email fromEmail = new Email(emailSender);
         Email toEmail = new Email(to);
         Content content = new Content(
                 "text/plain",
-                "Gracias por registrarse en Disney_Api");
-        String subject = "Disney_Api";
+                "Thanks for being part of us");
+        String subject = "Welcome to Disney_Api";
         Mail mail = new Mail(fromEmail, subject, toEmail, content);
         SendGrid sg = new SendGrid(apiKey);
         Request request = new Request();
@@ -43,9 +44,9 @@ public class EmailServiceImpl implements EmailService{
             request.setEndpoint("mail/send");
             request.setBody(mail.build());
             Response response = sg.api(request);
-            System.out.println(response.getStatusCode());
-            System.out.println(response.getBody());
-            System.out.println(response.getHeaders());
+            if (response.getStatusCode() != 200 &&
+                    response.getStatusCode() != 201 &&
+                    response.getStatusCode() != 202) throw new EmailException("Please veriry the configue");
         } catch (IOException ex) {
             System.out.println("Invalid Mail");
         }

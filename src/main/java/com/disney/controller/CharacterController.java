@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -55,16 +56,15 @@ public class CharacterController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    /*
     @GetMapping
-    public ResponseEntity<List<CharacterDetailledDTO>> getByFilters (
+    public ResponseEntity<List<CharacterBasicDTO>> getByFilters (
         @RequestParam(required = false) String name,
         @RequestParam(required = false) Long age,
         @RequestParam(required = false) List<Long> movies,
         @RequestParam(required = false, defaultValue = "ASC") String order
      ) {
-        List<CharacterDetailledDTO> characters = characterService.getByFilters(name, age, movies, order);
+        List<CharacterBasicDTO> characters = characterService.getByFilters(name, age, movies, order);
         return ResponseEntity.ok(characters);
     }
-    */
+    
 }

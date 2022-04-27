@@ -2,12 +2,9 @@ package com.disney.entity;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.persistence.*;
-
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,7 +21,7 @@ import lombok.Setter;
 public class CharacterEntity {
     
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String image;

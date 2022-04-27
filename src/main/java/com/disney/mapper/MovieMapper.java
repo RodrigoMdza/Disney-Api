@@ -2,35 +2,25 @@ package com.disney.mapper;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import com.disney.dto.MovieBasicDTO;
 import com.disney.dto.MovieDetailedDTO;
 import com.disney.entity.MovieEntity;
-import com.disney.repository.GenderRepository;
-import com.disney.repository.CharacterRepository;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class MovieMapper {
 
-    @Autowired
-    GenderRepository genderRepository;
-    @Autowired
-    CharacterRepository characterRepository;
-    
     public MovieEntity movieDTO2Entity(MovieDetailedDTO dto) {
         MovieEntity movie = new MovieEntity();
         movie.setImage(dto.getImage());
         movie.setTitle(dto.getTitle());
         movie.setCreationDate(dto.getCreationDate());
         movie.setRating(dto.getRating());
-        movie.setGenderId(dto.getGenderId());;
+        movie.setGenderId(dto.getGenderId());
         movie.setCharacters(dto.getCharacters());
         return movie;
     }
-    
+    // VER COMO CREAR BIEN ESTOS DOS METODOS Y EL LOAD CHARACTERS
     public MovieDetailedDTO movieEntity2DTO(MovieEntity entity) {
         MovieDetailedDTO dto = new MovieDetailedDTO();
         dto.setId(entity.getId());
@@ -56,7 +46,6 @@ public class MovieMapper {
         MovieBasicDTO basicDTO;
         for (MovieEntity entity : entities) {
             basicDTO = new MovieBasicDTO();
-            basicDTO.setId(entity.getId());
             basicDTO.setImage(entity.getImage());
             basicDTO.setTitle(entity.getTitle());
             basicDTO.setCreationDate(entity.getCreationDate());
@@ -65,13 +54,20 @@ public class MovieMapper {
         return dtos;
         }
 
+        public List<MovieEntity> movieDTOList2Entity(List<MovieDetailedDTO> dtos) {
+            List<MovieEntity> entities = new ArrayList<>();
+            for (MovieDetailedDTO dto : dtos) {
+                entities.add(movieDTO2Entity(dto));
+            }
+            return entities;
+        }
+
         public void update (MovieEntity entity, MovieDetailedDTO dto) {
             entity.setImage(dto.getImage());
             entity.setTitle(dto.getTitle());
             entity.setCreationDate(dto.getCreationDate());
             entity.setRating(dto.getRating());
             entity.setGenderId(dto.getGenderId());
-            entity.setCharacters(dto.getCharacters());
         }
 
 }

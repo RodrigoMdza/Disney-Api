@@ -5,11 +5,13 @@ import java.util.Optional;
 
 import com.disney.dto.MovieBasicDTO;
 import com.disney.dto.MovieDetailedDTO;
+import com.disney.dto.MovieFiltersDTO;
 import com.disney.entity.MovieEntity;
 import com.disney.exception.ParamNotFound;
 import com.disney.entity.CharacterEntity;
 import com.disney.mapper.MovieMapper;
 import com.disney.repository.MovieRepository;
+import com.disney.repository.specifications.MovieSpecification;
 import com.disney.repository.CharacterRepository;
 import com.disney.service.MovieService;
 
@@ -25,6 +27,8 @@ public class MovieServiceImpl implements MovieService{
     private MovieRepository movieRepository;
     @Autowired
     private CharacterRepository characterRepository;
+    @Autowired
+    private MovieSpecification movieSpecification;
     
     public MovieDetailedDTO save (MovieDetailedDTO dto) {
         MovieEntity movie = movieMapper.movieDTO2Entity(dto);
@@ -62,8 +66,8 @@ public class MovieServiceImpl implements MovieService{
         CharacterEntity character = characterOptional.get();
         movie.getCharacters().add(character);
         movieRepository.save(movie);
-        MovieDetailedDTO movie2 = movieMapper.movieEntity2DTO(movie);
-        return movie2;
+        MovieDetailedDTO result = movieMapper.movieEntity2DTO(movie);
+        return result;
     }
 
     public MovieDetailedDTO deleteCharacter (Long id, Long characterId) {
@@ -77,8 +81,7 @@ public class MovieServiceImpl implements MovieService{
             throw new ParamNotFound("This characterId is not present");
         }
         CharacterEntity character = characterOptional.get();
-        List<CharacterEntity> characters = movie.getCharacters();
-        characters.remove(character);
+        movie.getCharacters().remove(character);
         movieRepository.save(movie);
         MovieDetailedDTO movie2 = movieMapper.movieEntity2DTO(movie);
         return movie2;
@@ -101,6 +104,14 @@ public class MovieServiceImpl implements MovieService{
             throw new ParamNotFound("This movieId is not present");
         }
         movieRepository.deleteById(id);
+    }
+
+    @Override
+    public List<MovieBasicDTO> getByFilters(String name, Long genre, String order) {
+        MovieFiltersDTO filtersDTO = new MovieFiltersDTO(name, genre, order);
+        List<MovieEntity> entities = movieRepository.findAll(movieSpecification.getByFilters(filtersDTO));
+        List<MovieBasicDTO> basicDTOS = movieMapper.movieEntityList2BasicDTOList(entities);
+        return basicDTOS;
     }
 
 }

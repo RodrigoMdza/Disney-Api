@@ -1,5 +1,7 @@
 package com.disney.controller;
 
+import javax.validation.Valid;
+
 import com.disney.dto.GenderDTO;
 import com.disney.service.GenderService;
 
@@ -19,7 +21,7 @@ public class GenderController {
     private GenderService genderService;
 
     @PostMapping
-    public ResponseEntity<GenderDTO> save (@RequestBody GenderDTO gender) {
+    public ResponseEntity<GenderDTO> save (@Valid @RequestBody GenderDTO gender) {
         GenderDTO new_gender = genderService.save(gender);
         return ResponseEntity.status(HttpStatus.CREATED).body(new_gender);
     }

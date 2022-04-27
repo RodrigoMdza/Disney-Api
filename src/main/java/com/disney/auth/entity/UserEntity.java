@@ -10,6 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.Email;
 
 @Entity
 @Table(name = "usuario")
@@ -23,25 +24,22 @@ public class UserEntity{
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     
+    @Email
     private String username;
+
+
     private String password;
-    private boolean accountNonExpired = true;
-    private boolean accountNonBLocked = true;
-    private boolean credentialsNonExpired = true;
-    private boolean enabled = true;
+
+    private boolean accountNonExpired;
+    private boolean accountNonLocked;
+    private boolean credentialsNonExpired;
+    private boolean enabled;
 
     public UserEntity() {
-    }
-
-    public UserEntity(Long id, String username, String password, boolean accountNonExpired, boolean accountNonBLocked,
-            boolean credentialsNonExpired, boolean enabled) {
-        this.id = id;
-        this.username = username;
-        this.password = password;
-        this.accountNonExpired = accountNonExpired;
-        this.accountNonBLocked = accountNonBLocked;
-        this.credentialsNonExpired = credentialsNonExpired;
-        this.enabled = enabled;
+        this.accountNonExpired = true;
+        this.accountNonLocked = true;
+        this.credentialsNonExpired = true;
+        this.enabled = true;
     }
 
     public Long getId() {
@@ -76,12 +74,12 @@ public class UserEntity{
         this.accountNonExpired = accountNonExpired;
     }
 
-    public boolean isAccountNonBLocked() {
-        return accountNonBLocked;
+    public boolean isAccountNonLocked() {
+        return accountNonLocked;
     }
 
-    public void setAccountNonBLocked(boolean accountNonBLocked) {
-        this.accountNonBLocked = accountNonBLocked;
+    public void setAccountNonLocked(boolean accountNonLocked) {
+        this.accountNonLocked = accountNonLocked;
     }
 
     public boolean isCredentialsNonExpired() {

@@ -7,6 +7,8 @@ import com.disney.auth.dto.AuthenticationResponse;
 import com.disney.auth.dto.UserDTO;
 import com.disney.auth.service.JwtUtils;
 import com.disney.auth.service.UserDetailsCustomService;
+import com.disney.exception.ParamNotFound;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,23 +26,19 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/auth")
 public class UserAuthController {
     
-    @Autowired 
-    AuthenticationManager authenticationManager;
     
-    @Autowired
-    UserDetailsCustomService userDetailsCustomService;
-    
-    @Autowired
-    JwtUtils jwtTokenUtil;
+    private AuthenticationManager authenticationManager;
+    private UserDetailsCustomService userDetailsCustomService;
+    private JwtUtils jwtTokenUtil;
 
     @Autowired
     public UserAuthController(
         AuthenticationManager authenticationManager,
         UserDetailsCustomService userDetailsCustomService, 
         JwtUtils jwtTokenUtil) {
-        this.authenticationManager = authenticationManager;
-        this.userDetailsCustomService = userDetailsCustomService;
-        this.jwtTokenUtil = jwtTokenUtil;
+            this.authenticationManager = authenticationManager;
+            this.userDetailsCustomService = userDetailsCustomService;
+            this.jwtTokenUtil = jwtTokenUtil;
     }
 
     @PostMapping("/signup")
@@ -58,7 +56,7 @@ public class UserAuthController {
             userDetails = (UserDetails) auth.getPrincipal();
 
         } catch (BadCredentialsException e) {
-            throw new Exception ("incorrect username or password, e");
+            throw new ParamNotFound ("incorrect username or password");
         }
         final String jwt = jwtTokenUtil.generateToken(userDetails);
         return ResponseEntity.ok(new AuthenticationResponse(jwt));

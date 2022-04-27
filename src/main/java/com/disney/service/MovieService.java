@@ -9,6 +9,7 @@ public interface MovieService {
     
     MovieDetailedDTO save(MovieDetailedDTO dto);
     MovieDetailedDTO getById(Long id);
+    List<MovieBasicDTO> getByFilters(String name, Long genre, String order);
     List<MovieBasicDTO> getallPeliculas();
     MovieDetailedDTO addCharacter(Long id, Long characterId);
     MovieDetailedDTO deleteCharacter(Long id, Long characterId);

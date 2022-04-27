@@ -1,11 +1,8 @@
 package com.disney.entity;
 
-
 import javax.persistence.*;
-
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,7 +15,7 @@ import lombok.Setter;
 public class GenderEntity {
     
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name;
