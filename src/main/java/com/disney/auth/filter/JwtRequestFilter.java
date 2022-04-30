@@ -1,6 +1,7 @@
 package com.disney.auth.filter;
 
 import java.io.IOException;
+import java.util.Collections;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -24,25 +25,28 @@ public class JwtRequestFilter extends OncePerRequestFilter{
     @Autowired
     private UserDetailsCustomService userDetailsCustomService;
     @Autowired
-    JwtUtils jwtUtil;  
+    JwtUtils jwtUtil;
+
+    private static final String BEARER = "Bearer";
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
         final String authorizationHeader = request.getHeader("Authorization");
+
         String username = null;
-        String jwtToken = null;
+        String jwt = null;
         
-        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer")) {
-            jwtToken = authorizationHeader.substring(7);
-            username = jwtUtil.extractUsername(jwtToken);
+        if (authorizationHeader != null && authorizationHeader.startsWith(BEARER)) {
+            jwt = authorizationHeader.substring(7);
+            username = jwtUtil.extractUsername(jwt);
         }
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = userDetailsCustomService.loadUserByUsername(username);
-            if (jwtUtil.validateToken(jwtToken, userDetails)) {
+            if (jwtUtil.validateToken(jwt, userDetails)) {
                 UsernamePasswordAuthenticationToken authReq =
-                    new UsernamePasswordAuthenticationToken(userDetails.getUsername(), userDetails.getPassword());
+                    new UsernamePasswordAuthenticationToken(userDetails.getUsername(), userDetails.getPassword(), Collections.EMPTY_LIST);
                 SecurityContextHolder.getContext().setAuthentication(authReq);
             }
         }

@@ -7,6 +7,7 @@ import com.disney.dto.MovieBasicDTO;
 import com.disney.dto.MovieDetailedDTO;
 import com.disney.dto.MovieFiltersDTO;
 import com.disney.entity.MovieEntity;
+import com.disney.exception.ErrorsEnum;
 import com.disney.exception.ParamNotFound;
 import com.disney.entity.CharacterEntity;
 import com.disney.mapper.MovieMapper;
@@ -33,85 +34,79 @@ public class MovieServiceImpl implements MovieService{
     public MovieDetailedDTO save (MovieDetailedDTO dto) {
         MovieEntity movie = movieMapper.movieDTO2Entity(dto);
         MovieEntity new_movie = movieRepository.save(movie);
-        MovieDetailedDTO result = movieMapper.movieEntity2DTO(new_movie);
+        MovieDetailedDTO result = movieMapper.movieEntity2DTO(new_movie, true);
         return result;
+    }
+
+    @Override
+    public List<MovieBasicDTO> getByFilters(String name, Long gender, String order) {
+        MovieFiltersDTO filtersDTO = new MovieFiltersDTO(name, gender, order);
+        List<MovieEntity> entities = movieRepository.findAll(movieSpecification.getByFilters(filtersDTO));
+        List<MovieBasicDTO> basicDTOS = movieMapper.movieEntityList2BasicDTOList(entities);
+        return basicDTOS;
     }
 
     public MovieDetailedDTO getById (Long id) {
         Optional <MovieEntity> entity = movieRepository.findById(id);
         if (!entity.isPresent()) {
-            throw new ParamNotFound("This movieId is not present");
+            throw new ParamNotFound(ErrorsEnum.IDMOVIENOTFOUND.getMessage());
         }
-        MovieDetailedDTO movie = movieMapper.movieEntity2DTO(entity.get());
+        MovieDetailedDTO movie = movieMapper.movieEntity2DTO(entity.get(), true);
         //AGREGAR LOAD PAISES = TRUE
         return movie;
-    }
-
-    public List<MovieBasicDTO> getallPeliculas() {
-        List<MovieEntity> movies = movieRepository.findAll();
-        List<MovieBasicDTO> result = movieMapper.movieEntityList2BasicDTOList(movies);
-        return result;
     }
 
     public MovieDetailedDTO addCharacter (Long id, Long characterId) {
         Optional<MovieEntity> movieOptional = movieRepository.findById(id);
         if (!movieOptional.isPresent()) {
-            throw new ParamNotFound("This movieId is not present");
+            throw new ParamNotFound(ErrorsEnum.IDMOVIENOTFOUND.getMessage());
         }
         MovieEntity movie = movieOptional.get();
         Optional<CharacterEntity> characterOptional = characterRepository.findById(characterId);
         if (!characterOptional.isPresent()) {
-            throw new ParamNotFound("This characterId is not present");
+            throw new ParamNotFound(ErrorsEnum.IDCHARACTERNOTFOUND.getMessage());
         }
         CharacterEntity character = characterOptional.get();
         movie.getCharacters().add(character);
         movieRepository.save(movie);
-        MovieDetailedDTO result = movieMapper.movieEntity2DTO(movie);
+        MovieDetailedDTO result = movieMapper.movieEntity2DTO(movie, true);
         return result;
     }
 
     public MovieDetailedDTO deleteCharacter (Long id, Long characterId) {
         Optional<MovieEntity> movieOptional = movieRepository.findById(id);
         if(!movieOptional.isPresent()) {
-            throw new ParamNotFound("This movieId is not present");
+            throw new ParamNotFound(ErrorsEnum.IDMOVIENOTFOUND.getMessage());
         }
         MovieEntity movie = movieOptional.get();
         Optional<CharacterEntity> characterOptional = characterRepository.findById(characterId);
         if (!characterOptional.isPresent()) {
-            throw new ParamNotFound("This characterId is not present");
+            throw new ParamNotFound(ErrorsEnum.IDCHARACTERNOTFOUND.getMessage());
         }
         CharacterEntity character = characterOptional.get();
         movie.getCharacters().remove(character);
         movieRepository.save(movie);
-        MovieDetailedDTO movie2 = movieMapper.movieEntity2DTO(movie);
+        MovieDetailedDTO movie2 = movieMapper.movieEntity2DTO(movie, true);
         return movie2;
     }
 
     public MovieDetailedDTO update(Long id, MovieDetailedDTO dto) {
         Optional<MovieEntity> entity = movieRepository.findById(id);
         if (!entity.isPresent()) {
-            throw new ParamNotFound("This movieId is not present");
+            throw new ParamNotFound(ErrorsEnum.IDMOVIENOTFOUND.getMessage());
         }
         movieMapper.update(entity.get(), dto);
         movieRepository.save(entity.get());
-        MovieDetailedDTO result = movieMapper.movieEntity2DTO(entity.get());// CONSULTAR COMO AGREGAR EL LOADPELICULAS FALSE
+        MovieDetailedDTO result = movieMapper.movieEntity2DTO(entity.get(), true);
         return result;
     }
 
     public void delete (Long id) {
-        Optional<CharacterEntity> entity = characterRepository.findById(id);
+        Optional<MovieEntity> entity = movieRepository.findById(id);
         if (!entity.isPresent()) {
-            throw new ParamNotFound("This movieId is not present");
+            throw new ParamNotFound(ErrorsEnum.IDMOVIENOTFOUND.getMessage());
         }
         movieRepository.deleteById(id);
-    }
-
-    @Override
-    public List<MovieBasicDTO> getByFilters(String name, Long genre, String order) {
-        MovieFiltersDTO filtersDTO = new MovieFiltersDTO(name, genre, order);
-        List<MovieEntity> entities = movieRepository.findAll(movieSpecification.getByFilters(filtersDTO));
-        List<MovieBasicDTO> basicDTOS = movieMapper.movieEntityList2BasicDTOList(entities);
-        return basicDTOS;
     }
 
 }

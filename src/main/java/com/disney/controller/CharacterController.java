@@ -2,6 +2,8 @@ package com.disney.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import com.disney.dto.CharacterBasicDTO;
 import com.disney.dto.CharacterDetailledDTO;
 import com.disney.service.CharacterService;
@@ -27,14 +29,20 @@ public class CharacterController {
     private CharacterService characterService;
 
     @PostMapping
-    public ResponseEntity<CharacterDetailledDTO> save (@RequestBody CharacterDetailledDTO character) {
+    public ResponseEntity<CharacterDetailledDTO> save (@Valid @RequestBody CharacterDetailledDTO character) {
         CharacterDetailledDTO result = characterService.save(character);
         return ResponseEntity.status(HttpStatus.CREATED).body(result);
     }
 
-    @GetMapping("/all")
-    public ResponseEntity<List<CharacterBasicDTO>> getall() {
-        List<CharacterBasicDTO> characters = characterService.getallPersonajes();
+    @GetMapping
+    public ResponseEntity<List<CharacterBasicDTO>> getByFilters (
+        @RequestParam(required = false) String name,
+        @RequestParam(required = false) Long age,
+        @RequestParam(required = false) Float weight,
+        @RequestParam(required = false) List<Long> moviesId,
+        @RequestParam(required = false, defaultValue = "ASC") String order
+     ) {
+        List<CharacterBasicDTO> characters = characterService.getByFilters(name, age, moviesId, order);
         return ResponseEntity.ok().body(characters);
     }
 
@@ -45,7 +53,7 @@ public class CharacterController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CharacterDetailledDTO> update (@PathVariable Long id, @RequestBody CharacterDetailledDTO gender) {
+    public ResponseEntity<CharacterDetailledDTO> update (@Valid @PathVariable Long id, @RequestBody CharacterDetailledDTO gender) {
         CharacterDetailledDTO result = characterService.update(id, gender);
         return ResponseEntity.ok().body(result);
     }
@@ -54,17 +62,6 @@ public class CharacterController {
     public ResponseEntity<Void> delete (@PathVariable Long id) {
         characterService.delete(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-    }
-
-    @GetMapping
-    public ResponseEntity<List<CharacterBasicDTO>> getByFilters (
-        @RequestParam(required = false) String name,
-        @RequestParam(required = false) Long age,
-        @RequestParam(required = false) List<Long> movies,
-        @RequestParam(required = false, defaultValue = "ASC") String order
-     ) {
-        List<CharacterBasicDTO> characters = characterService.getByFilters(name, age, movies, order);
-        return ResponseEntity.ok(characters);
     }
     
 }

@@ -11,13 +11,18 @@ import javax.persistence.criteria.Predicate;
 import com.disney.dto.MovieFiltersDTO;
 import com.disney.entity.GenderEntity;
 import com.disney.entity.MovieEntity;
+import com.disney.service.MovieService;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 @Component
 public class MovieSpecification {
+
+    @Autowired
+    MovieService movieService;
 
     public Specification<MovieEntity> getByFilters(MovieFiltersDTO filtersDTO) {
         return (root, query, criteriaBuilder) -> {
@@ -35,8 +40,8 @@ public class MovieSpecification {
             }
             if (filtersDTO.getGender() != null) {
                 Join<GenderEntity, MovieEntity> join = root.join("gender", JoinType.INNER);
-                Expression<String> generoId = join.get("id");
-                predicates.add(generoId.in(filtersDTO.getGender()));
+                Expression<String> genderId = join.get("id");
+                predicates.add(genderId.in(filtersDTO.getGender()));
             }
 
             query.distinct(true);

@@ -34,30 +34,22 @@ public class MovieController {
         return ResponseEntity.status(HttpStatus.CREATED).body(new_movie);
     }
 
+    @GetMapping
+    public ResponseEntity<List<MovieBasicDTO>> getDetailsByFilters(
+            @RequestParam(required = false) String title,
+            @RequestParam(required = false) Long gender,
+            @RequestParam(required = false, defaultValue = "ASC") String order
+    ){
+        List<MovieBasicDTO> movies = movieService.getByFilters(title, gender, order);
+        return ResponseEntity.ok(movies);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<MovieDetailedDTO>getById(@PathVariable Long id) {
         MovieDetailedDTO movie = movieService.getById(id);
         return ResponseEntity.ok(movie);
     }
     
-    @GetMapping
-    public ResponseEntity<List<MovieBasicDTO>> getDetailsByFilters(
-            @RequestParam(required = false) String name,
-            @RequestParam(required = false) Long genre,
-            @RequestParam(required = false, defaultValue = "ASC") String order
-    ){
-        List<MovieBasicDTO> dtos = movieService.getByFilters(name, genre, order);
-        return ResponseEntity.ok().body(dtos);
-    }
-    
-    
-    // ESTE METODO DEBE MODIFICARSE Y PONERSE EN EL FILTRO AL NO ENVIAR PARAMETROS
-    @GetMapping("/all")
-    public ResponseEntity<List<MovieBasicDTO>> getall() {
-        List<MovieBasicDTO> movies = movieService.getallPeliculas();
-        return ResponseEntity.ok().body(movies);
-    }
-
     @PostMapping("/{id}/characters/{characterId}")
     public ResponseEntity<MovieDetailedDTO> addCharacter (@PathVariable Long id, @PathVariable Long characterId) {
         MovieDetailedDTO movie = movieService.addCharacter(id, characterId);
@@ -73,7 +65,6 @@ public class MovieController {
     @PutMapping("/{id}")
     public ResponseEntity<MovieDetailedDTO> update ( @Valid @RequestBody MovieDetailedDTO movie, @PathVariable Long id) {
         MovieDetailedDTO result = movieService.update(id, movie);
-        // DEVOLVER ASI EL RESULTADO O CON EL ESTADO NO CONTENT?
         return ResponseEntity.ok().body(result);
     }
 
@@ -83,6 +74,6 @@ public class MovieController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    }
+}
 
 

@@ -7,6 +7,7 @@ import java.util.List;
 import com.disney.dto.ApiErrorDTO;
 import com.disney.exception.EmailException;
 import com.disney.exception.ParamNotFound;
+import com.disney.exception.UserNotFound;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -22,12 +23,22 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @ControllerAdvice
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     
+    @ExceptionHandler(value = Throwable.class)
+    protected ResponseEntity<Object> GeneralException(Throwable ex, WebRequest request) {
+        ApiErrorDTO errorDTO = new ApiErrorDTO(
+            HttpStatus.INTERNAL_SERVER_ERROR,
+            ex.getMessage(),
+            Arrays.asList("General Exception")
+        );
+        return handleExceptionInternal((Exception) ex, errorDTO, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+    } 
+
     @ExceptionHandler(value = {ParamNotFound.class})
     protected ResponseEntity<Object> handleParamNotFound(RuntimeException ex, WebRequest request) {
-        ApiErrorDTO errorDTO = new ApiErrorDTO(
+        ApiErrorDTO errorDTO = new ApiErrorDTO( 
             HttpStatus.BAD_REQUEST,
             ex.getMessage(),
-            Arrays.asList("ParamNotFound")
+            Arrays.asList("A request Param is not present")
         );
         return handleExceptionInternal(ex, errorDTO, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
@@ -55,6 +66,16 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
             HttpStatus.INTERNAL_SERVER_ERROR,
             ex.getMessage(),
             Arrays.asList("EmailError")
+        );
+            return handleExceptionInternal(ex, errorDTO, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+     }
+
+     @ExceptionHandler(value = {UserNotFound.class})
+        protected ResponseEntity<Object> handleUserNotFoundException(UserNotFound ex, WebRequest request) {
+            ApiErrorDTO errorDTO = new ApiErrorDTO(
+            HttpStatus.UNAUTHORIZED,
+            ex.getMessage(),
+            Arrays.asList("Incorrect Username or Password")
         );
             return handleExceptionInternal(ex, errorDTO, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
      }

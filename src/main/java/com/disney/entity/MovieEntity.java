@@ -33,7 +33,6 @@ public class MovieEntity {
 
     private String image;
 
-    @Column(unique = true)
     private String title;
 
     @Column(name="creation_date")
@@ -59,9 +58,6 @@ public class MovieEntity {
 
     private boolean deleted=Boolean.FALSE;
 
-    // VER EN LAS MENTORIAS LOS TIPOS DE FETCHTYPE
-    // Debe agregarse los constructores del add y remove characters en la entidad??
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -74,76 +70,4 @@ public class MovieEntity {
         return Objects.equals(characters, movie.characters);
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getImage() {
-        return image;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public LocalDate getCreationDate() {
-        return creationDate;
-    }
-
-    public void setCreationDate(LocalDate creationDate) {
-        this.creationDate = creationDate;
-    }
-
-    public int getRating() {
-        return rating;
-    }
-
-    public void setRating(int rating) {
-        this.rating = rating;
-    }
-
-    public GenderEntity getGender() {
-        return gender;
-    }
-
-    public void setGender(GenderEntity gender) {
-        this.gender = gender;
-    }
-
-    public Long getGenderId() {
-        return genderId;
-    }
-
-    public void setGenderId(Long genderId) {
-        this.genderId = genderId;
-    }
-
-    public List<CharacterEntity> getCharacters() {
-        return characters;
-    }
-
-    public void setCharacters(List<CharacterEntity> characters) {
-        this.characters = characters;
-    }
-
-    public boolean isDeleted() {
-        return deleted;
-    }
-
-    public void setDeleted(boolean deleted) {
-        this.deleted = deleted;
-    }
-    
 }

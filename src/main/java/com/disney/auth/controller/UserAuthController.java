@@ -7,7 +7,8 @@ import com.disney.auth.dto.AuthenticationResponse;
 import com.disney.auth.dto.UserDTO;
 import com.disney.auth.service.JwtUtils;
 import com.disney.auth.service.UserDetailsCustomService;
-import com.disney.exception.ParamNotFound;
+import com.disney.exception.ErrorsEnum;
+import com.disney.exception.UserNotFound;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -56,7 +57,7 @@ public class UserAuthController {
             userDetails = (UserDetails) auth.getPrincipal();
 
         } catch (BadCredentialsException e) {
-            throw new ParamNotFound ("incorrect username or password");
+            throw new UserNotFound(ErrorsEnum.USERNOTFOUND.getMessage());
         }
         final String jwt = jwtTokenUtil.generateToken(userDetails);
         return ResponseEntity.ok(new AuthenticationResponse(jwt));

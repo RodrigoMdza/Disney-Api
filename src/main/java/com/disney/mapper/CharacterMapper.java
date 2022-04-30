@@ -3,7 +3,8 @@ package com.disney.mapper;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.disney.repository.MovieRepository;
+import com.disney.dto.MovieDetailedDTO;
+import com.disney.entity.MovieEntity;
 import com.disney.dto.CharacterBasicDTO;
 import com.disney.dto.CharacterDetailledDTO;
 import com.disney.entity.CharacterEntity;
@@ -15,7 +16,7 @@ import org.springframework.stereotype.Component;
 public class CharacterMapper {
 
     @Autowired
-    MovieRepository movieReository;
+    private MovieMapper movieMapper;
     
     public CharacterEntity characterDTO2Entity(CharacterDetailledDTO dto) {
         CharacterEntity character = new CharacterEntity();
@@ -28,7 +29,7 @@ public class CharacterMapper {
         return character;
     }
     
-    public CharacterDetailledDTO characterEntity2DTO(CharacterEntity entity) {
+    public CharacterDetailledDTO characterEntity2DTO(CharacterEntity entity, boolean loadMovies) {
         CharacterDetailledDTO dto = new CharacterDetailledDTO();
         dto.setId(entity.getId());
         dto.setImage(entity.getImage());
@@ -39,40 +40,31 @@ public class CharacterMapper {
         dto.setMovies(entity.getMovies());
         return dto;
     }
-
-    public List<CharacterDetailledDTO> characterEntityList2DTOList(List<CharacterEntity> entities) {
+    
+    public List<CharacterDetailledDTO> characterEntityList2DTOList(List<CharacterEntity> entities, boolean loadMovies) {
         List<CharacterDetailledDTO> dtos = new ArrayList<>();
         for (CharacterEntity entity : entities) {
-            dtos.add(characterEntity2DTO(entity));
+            dtos.add(this.characterEntity2DTO(entity, loadMovies));
         }
         return dtos;
     }
-
+    
     public List<CharacterBasicDTO> characterEntityList2BasicDTOList(List<CharacterEntity> entities) {
         List<CharacterBasicDTO> dtos = new ArrayList<>();
         CharacterBasicDTO basicDTO;
         for (CharacterEntity entity : entities) {
             basicDTO = new CharacterBasicDTO();
-            basicDTO.setId(entity.getId());
             basicDTO.setImage(entity.getImage());
             basicDTO.setName(entity.getName());
             dtos.add(basicDTO);
         }
         return dtos;
     }
-
+    
     public List<CharacterEntity> characterDetailedDTOList2EntityList(List<CharacterDetailledDTO> dtos) {
         List<CharacterEntity> entities = new ArrayList<>();
-        CharacterEntity entity;
         for (CharacterDetailledDTO dto : dtos) {
-            entity = new CharacterEntity();
-            entity.setId(dto.getId());
-            entity.setName(dto.getName());
-            entity.setWeight(dto.getWeight());
-            entity.setHistory(dto.getHistory());
-            entity.setAge(dto.getAge());
-            entity.setImage(dto.getImage());
-            entities.add(entity);
+            entities.add(this.characterDTO2Entity(dto));
         }
         return entities;
     }

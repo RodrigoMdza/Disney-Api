@@ -8,9 +8,8 @@ import com.disney.dto.CharacterDetailledDTO;
 public interface CharacterService {
     
     CharacterDetailledDTO save(CharacterDetailledDTO dto);
-    List<CharacterBasicDTO> getallPersonajes();
     CharacterDetailledDTO getById(Long id);
-    List<CharacterBasicDTO> getByFilters(String name,Long age, List<Long> movies,String order);
+    List<CharacterBasicDTO> getByFilters(String name,Long age, List<Long> moviesId,String order);
     CharacterDetailledDTO update(Long id, CharacterDetailledDTO dto);
     void delete (Long id);
     

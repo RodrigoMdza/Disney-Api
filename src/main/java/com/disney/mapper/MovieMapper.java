@@ -2,13 +2,20 @@ package com.disney.mapper;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.disney.dto.CharacterDetailledDTO;
 import com.disney.dto.MovieBasicDTO;
 import com.disney.dto.MovieDetailedDTO;
+import com.disney.entity.CharacterEntity;
 import com.disney.entity.MovieEntity;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class MovieMapper {
+
+    @Autowired
+    private CharacterMapper characterMapper;
 
     public MovieEntity movieDTO2Entity(MovieDetailedDTO dto) {
         MovieEntity movie = new MovieEntity();
@@ -20,8 +27,8 @@ public class MovieMapper {
         movie.setCharacters(dto.getCharacters());
         return movie;
     }
-    // VER COMO CREAR BIEN ESTOS DOS METODOS Y EL LOAD CHARACTERS
-    public MovieDetailedDTO movieEntity2DTO(MovieEntity entity) {
+
+    public MovieDetailedDTO movieEntity2DTO(MovieEntity entity, boolean loadCharacters) {
         MovieDetailedDTO dto = new MovieDetailedDTO();
         dto.setId(entity.getId());
         dto.setImage(entity.getImage());
@@ -33,10 +40,10 @@ public class MovieMapper {
         return dto;
     }
 
-    public List<MovieDetailedDTO> movieEntityList2DTOList(List<MovieEntity> entities) {
+    public List<MovieDetailedDTO> movieEntityList2DTOList(List<MovieEntity> entities, boolean loadCharacters) {
         List<MovieDetailedDTO> dtos = new ArrayList<>();
         for (MovieEntity entity : entities) {
-            dtos.add(movieEntity2DTO(entity));
+            dtos.add(this.movieEntity2DTO(entity, loadCharacters));
         }
         return dtos;
     }
@@ -54,10 +61,10 @@ public class MovieMapper {
         return dtos;
         }
 
-        public List<MovieEntity> movieDTOList2Entity(List<MovieDetailedDTO> dtos) {
+        public List<MovieEntity> movieDetailedDTOList2EntityList(List<MovieDetailedDTO> dtos) {
             List<MovieEntity> entities = new ArrayList<>();
             for (MovieDetailedDTO dto : dtos) {
-                entities.add(movieDTO2Entity(dto));
+                entities.add(this.movieDTO2Entity(dto));
             }
             return entities;
         }

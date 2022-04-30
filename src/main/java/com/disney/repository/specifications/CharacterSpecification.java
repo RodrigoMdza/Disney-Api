@@ -27,7 +27,7 @@ public class CharacterSpecification {
             if (StringUtils.hasLength(filtersDTO.getName())) { 
                 predicates.add( 
                         criteriaBuilder.like(
-                                criteriaBuilder.lower(root.get("nombre")),
+                                criteriaBuilder.lower(root.get("name")),
                                 "%" + filtersDTO.getName().toLowerCase() + "%"
                         )
                 );
@@ -35,15 +35,15 @@ public class CharacterSpecification {
             }
             if (filtersDTO.getAge() != null) { 
                 predicates.add(  
-                        criteriaBuilder.equal(root.get("edad"), filtersDTO.getAge())
+                        criteriaBuilder.equal(root.get("age"), filtersDTO.getAge())
                 );
 
             }
 
-            if (!CollectionUtils.isEmpty(filtersDTO.getMovies())) {
-                Join<MovieEntity, CharacterEntity> join = root.join("movies", JoinType.INNER);
-                Expression<String> moviesId = join.get("id");
-                predicates.add(moviesId.in(filtersDTO.getMovies()));
+            if (!CollectionUtils.isEmpty(filtersDTO.getMoviesId())) {
+                Join<CharacterEntity, MovieEntity> join = root.join("movies", JoinType.INNER);
+                Expression<String> movieId = join.get("id");
+                predicates.add(movieId.in(filtersDTO.getMoviesId()));
             }
 
             query.distinct(true);
